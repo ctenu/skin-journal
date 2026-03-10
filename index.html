@@ -377,7 +377,7 @@
 </div><!-- end app -->
 
 <script>
-  // ── State ──
+document.addEventListener('DOMContentLoaded', function() {
   const SYMPTOMS_LIST = ["Redness","Itching","Swelling","Hives","Dry patches","Burning","Peeling","Rash"];
   const tagData = { foods: [], skincare: [], exposures: [], meds: [] };
   let selectedSymptoms = [];
@@ -707,6 +707,8 @@ Be warm, specific, and encouraging. Plain English only — no medical jargon. Be
   if (isIos() && !isInStandaloneMode() && !localStorage.getItem('skin-journal-install-dismissed')) {
     setTimeout(() => document.getElementById('install-banner').classList.add('show'), 1500);
   }
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
