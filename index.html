@@ -4,208 +4,140 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Skin Journal</title>
-
-  <!-- PWA core -->
-  <meta name="application-name" content="Skin Journal" />
-  <meta name="description" content="Daily skin trigger tracker — log diet, stress, skincare and find patterns." />
-  <meta name="theme-color" content="#3d2c1e" />
-  <meta name="mobile-web-app-capable" content="yes" />
-
-  <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Skin Journal" />
-
-  <!-- App icon (SVG inline as data URI) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233d2c1e'/><text y='68' x='50' text-anchor='middle' font-size='54'>🌿</text></svg>" />
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#3d2c1e" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #faf6f0; --warm-white: #fff9f2; --bark: #3d2c1e; --moss: #4a5e3a;
-      --sage: #8a9e76; --sage-light: #c8d9b8; --blush: #e8b4a0; --blush-light: #f5ddd4;
-      --sand: #d4b896; --sand-light: #ede0cf; --ink: #2a1f14; --muted: #8a7968; --border: #e2d5c3;
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cream:#faf6f0;--warm:#fff9f2;--bark:#3d2c1e;--moss:#4a5e3a;
+      --sage:#8a9e76;--sage-light:#c8d9b8;--blush-light:#f5ddd4;--blush:#e8b4a0;
+      --sand:#d4b896;--sand-light:#ede0cf;--ink:#2a1f14;--muted:#8a7968;--border:#e2d5c3;
     }
-    body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(--ink); }
-    .app { min-height: 100vh; }
-
+    body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);-webkit-tap-highlight-color:transparent}
     /* Header */
-    .header { background: var(--bark); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .header-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); letter-spacing: 0.02em; }
-    .header-subtitle { font-size: 12px; color: var(--sand); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
-    .tab-bar { display: flex; gap: 4px; }
-    .tab-btn { padding: 8px 18px; border-radius: 20px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.2s; }
-    .tab-btn.active { background: var(--sage); color: white; }
-    .tab-btn.inactive { background: transparent; color: var(--sand); }
-    .tab-btn.inactive:hover { background: rgba(255,255,255,0.1); }
-
-    /* Layout */
-    .content { max-width: 760px; margin: 0 auto; padding: 32px 24px; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
+    .header{background:var(--bark);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .header-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream)}
+    .header-sub{font-size:11px;color:var(--sand);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+    .tabs{display:flex;gap:4px}
+    .tab{padding:7px 16px;border-radius:20px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all .2s}
+    .tab.on{background:var(--sage);color:#fff}
+    .tab.off{background:transparent;color:var(--sand)}
+    /* Content */
+    .content{max-width:720px;margin:0 auto;padding:24px 20px 100px}
+    .panel{display:none}.panel.on{display:block}
     /* Cards */
-    .card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--bark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-
+    .card{background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:14px}
+    .card-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--bark);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     /* Date strip */
-    .date-strip { background: var(--bark); border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
-    .date-text { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 18px; }
-    .date-sub { font-size: 12px; color: var(--sand); margin-top: 2px; }
-    .saved-badge { background: var(--sage); color: white; font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; display: none; }
-    .saved-badge.show { display: inline-block; }
-
+    .datestrip{background:var(--bark);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+    .datetext{font-family:'Playfair Display',serif;color:var(--cream);font-size:17px}
+    .datesub{font-size:11px;color:var(--sand);margin-top:2px}
+    .saved{background:var(--sage);color:#fff;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;display:none}
+    .saved.on{display:inline-block}
     /* Form */
-    label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.03em; }
-    input[type="text"], textarea {
-      width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
-      background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s;
-    }
-    input[type="text"]:focus, textarea:focus { border-color: var(--sage); }
-    textarea { resize: vertical; min-height: 80px; }
-    .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
-
+    label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.03em}
+    input[type=text],textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:10px;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s}
+    input[type=text]:focus,textarea:focus{border-color:var(--sage)}
+    textarea{resize:vertical;min-height:76px}
+    .hint{font-size:11px;color:var(--muted);margin-top:5px}
     /* Tags */
-    .tags-container {
-      display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px;
-      border: 1px solid var(--border); border-radius: 10px; background: var(--cream); min-height: 44px; cursor: text;
-    }
-    .tags-container:focus-within { border-color: var(--sage); }
-    .tag { display: flex; align-items: center; gap: 4px; background: var(--sage-light); color: var(--moss); padding: 3px 10px; border-radius: 20px; font-size: 13px; }
-    .tag-remove { cursor: pointer; font-size: 16px; line-height: 1; color: var(--sage); background: none; border: none; padding: 0; }
-    .tag-input { border: none !important; background: transparent !important; outline: none !important; font-size: 13px !important; color: var(--ink) !important; min-width: 120px; flex: 1; font-family: 'DM Sans', sans-serif; padding: 2px 4px !important; width: auto !important; }
-
-    /* Slider */
-    .slider-row { display: flex; align-items: center; gap: 12px; }
-    .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
-    input[type="range"] { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; outline: none; background: var(--border); cursor: pointer; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--bark); border-radius: 50%; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-    .slider-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--bark); min-width: 28px; text-align: center; }
-
+    .tagbox{display:flex;flex-wrap:wrap;gap:5px;padding:7px 9px;border:1px solid var(--border);border-radius:10px;background:var(--cream);min-height:42px;cursor:text}
+    .tagbox:focus-within{border-color:var(--sage)}
+    .tag{display:flex;align-items:center;gap:3px;background:var(--sage-light);color:var(--moss);padding:3px 9px;border-radius:20px;font-size:12px}
+    .tagx{cursor:pointer;font-size:14px;line-height:1;color:var(--sage);background:none;border:none;padding:0}
+    .taginput{border:none!important;background:transparent!important;outline:none!important;font-size:14px!important;color:var(--ink)!important;min-width:100px;flex:1;font-family:'DM Sans',sans-serif;padding:2px 3px!important;width:auto!important}
+    /* Sliders */
+    .slrow{display:flex;align-items:center;gap:10px}
+    .sllabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:3px}
+    input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;outline:none;background:var(--border);cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--bark);border-radius:50%;cursor:pointer}
+    .slval{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--bark);min-width:24px;text-align:center}
     /* Symptom chips */
-    .symptom-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .symptom-chip { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.15s; background: var(--cream); color: var(--muted); user-select: none; font-family: 'DM Sans', sans-serif; }
-    .symptom-chip.selected { background: var(--blush-light); border-color: var(--blush); color: var(--bark); }
-
+    .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+    .chip{padding:7px 13px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--cream);color:var(--muted);user-select:none;font-family:'DM Sans',sans-serif;transition:all .15s}
+    .chip.on{background:var(--blush-light);border-color:var(--blush);color:var(--bark)}
     /* Photo */
-    .photo-upload-label { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: border-color 0.2s; background: var(--cream); display: block; }
-    .photo-upload-label:hover { border-color: var(--sage); }
-    .photo-preview { position: relative; display: inline-block; margin-top: 10px; }
-    .photo-preview img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; display: block; }
-    .photo-remove { position: absolute; top: -6px; right: -6px; background: var(--bark); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
+    .photolabel{border:2px dashed var(--border);border-radius:12px;padding:22px;text-align:center;cursor:pointer;background:var(--cream);display:block;transition:border-color .2s}
+    .photolabel:hover{border-color:var(--sage)}
+    .photopreview{position:relative;display:inline-block;margin-top:10px}
+    .photopreview img{width:110px;height:110px;object-fit:cover;border-radius:10px;display:block}
+    .photorm{position:absolute;top:-6px;right:-6px;background:var(--bark);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer}
     /* Buttons */
-    .submit-btn { width: 100%; padding: 16px; background: var(--bark); color: var(--cream); border: none; border-radius: 12px; cursor: pointer; font-family: 'Playfair Display', serif; font-size: 17px; transition: all 0.2s; margin-top: 8px; }
-    .submit-btn:hover { background: var(--moss); transform: translateY(-1px); }
-    .analyze-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--moss), var(--sage)); color: white; border: none; border-radius: 12px; cursor: pointer; font-family: 'Playfair Display', serif; font-size: 17px; transition: all 0.2s; margin-bottom: 20px; }
-    .analyze-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .analyze-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
-
-    /* History */
-    .log-entry { background: var(--warm-white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 12px; }
-    .log-entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .log-date { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--bark); }
-    .severity-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-    .sev-0 { background: #e8f5e9; color: #2e7d32; }
-    .sev-1 { background: #e8f5e9; color: #2e7d32; }
-    .sev-2 { background: #f9fbe7; color: #558b2f; }
-    .sev-3 { background: #fff8e1; color: #f57f17; }
-    .sev-4 { background: #fbe9e7; color: #bf360c; }
-    .sev-5 { background: #fce4ec; color: #880e4f; }
-    .log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .log-field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 3px; }
-    .log-field p { font-size: 13px; color: var(--ink); }
-    .log-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-    .log-tag { background: var(--sand-light); color: var(--bark); padding: 2px 8px; border-radius: 10px; font-size: 12px; }
-    .log-tag.symptom { background: #fce4ec; }
-
-    /* Analysis */
-    .analysis-result { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .analysis-result h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--bark); margin-bottom: 16px; }
-    .analysis-text { font-size: 14px; line-height: 1.8; color: var(--ink); white-space: pre-wrap; }
-
-    /* Empty state */
-    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--bark); margin-bottom: 8px; }
-
-    /* Loading */
-    .loading-dots { display: inline-flex; gap: 4px; align-items: center; margin-left: 8px; vertical-align: middle; }
-    .loading-dots span { width: 6px; height: 6px; background: white; border-radius: 50%; display: inline-block; animation: bounce 1.2s infinite; }
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
-
+    .savebtn{width:100%;padding:15px;background:var(--bark);color:var(--cream);border:none;border-radius:12px;cursor:pointer;font-family:'Playfair Display',serif;font-size:16px;margin-top:8px;transition:all .2s}
+    .savebtn:hover{background:var(--moss)}
+    .analyzebtn{width:100%;padding:15px;background:linear-gradient(135deg,var(--moss),var(--sage));color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px;transition:all .2s}
+    .analyzebtn:hover{opacity:.9}
+    .analyzebtn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
     /* Two col */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .severity-section { display: none; }
-    .severity-section.show { display: block; margin-bottom: 16px; }
-
-    /* PWA / Mobile improvements */
-    body { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
-    .app { padding-bottom: env(safe-area-inset-bottom); }
-
-    /* Bottom tab bar for mobile (replaces header tabs) */
-    .bottom-nav {
-      display: none;
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: var(--bark);
-      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
-      display: flex; justify-content: space-around; align-items: center;
-      z-index: 100; border-top: 1px solid rgba(255,255,255,0.1);
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    /* Severity section */
+    .sevsec{display:none;margin-bottom:14px}.sevsec.on{display:block}
+    /* History */
+    .entry{background:var(--warm);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:11px}
+    .entryhead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+    .entrydate{font-family:'Playfair Display',serif;font-size:15px;color:var(--bark)}
+    .badge{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:500}
+    .s0,.s1{background:#e8f5e9;color:#2e7d32}
+    .s2{background:#f9fbe7;color:#558b2f}
+    .s3{background:#fff8e1;color:#f57f17}
+    .s4{background:#fbe9e7;color:#bf360c}
+    .s5{background:#fce4ec;color:#880e4f}
+    .entgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .entfield label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+    .entfield p{font-size:12px;color:var(--ink)}
+    .logtags{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+    .logtag{background:var(--sand-light);color:var(--bark);padding:2px 7px;border-radius:8px;font-size:11px}
+    .logtag.sym{background:#fce4ec}
+    /* Analysis */
+    .result{background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:22px}
+    .result h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--bark);margin-bottom:14px}
+    .resulttext{font-size:13px;line-height:1.8;color:var(--ink)}
+    /* Empty */
+    .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+    .emptyicon{font-size:44px;margin-bottom:10px}
+    .emptytitle{font-family:'Playfair Display',serif;font-size:17px;color:var(--bark);margin-bottom:6px}
+    /* Loading */
+    .dots{display:inline-flex;gap:4px;align-items:center;margin-left:8px;vertical-align:middle}
+    .dots span{width:6px;height:6px;background:#fff;border-radius:50%;display:inline-block;animation:bounce 1.2s infinite}
+    .dots span:nth-child(2){animation-delay:.2s}
+    .dots span:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+    /* Bottom nav */
+    .botnav{position:fixed;bottom:0;left:0;right:0;background:var(--bark);display:none;justify-content:space-around;align-items:center;padding:8px 0;padding-bottom:calc(8px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1);z-index:100}
+    .botnav.on{display:flex}
+    .navbtn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:5px 20px;color:var(--sand);font-family:'DM Sans',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.05em;transition:color .2s;min-width:64px}
+    .navbtn .ni{font-size:20px;line-height:1}
+    .navbtn.on{color:var(--sage-light)}
+    /* iOS install banner */
+    .installbanner{background:var(--moss);color:#fff;padding:11px 18px;font-size:12px;display:none;align-items:center;justify-content:space-between;gap:10px}
+    .installbanner.on{display:flex}
+    .installbtn{background:#fff;color:var(--moss);border:none;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+    .dismissbtn{background:none!important;color:rgba(255,255,255,.7)!important;font-size:17px!important;padding:0!important;border:none;cursor:pointer}
+    /* Responsive */
+    @media(max-width:600px){
+      .tabs{display:none}
+      .botnav{display:flex}
+      .content{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
     }
-    .bottom-nav-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      background: none; border: none; cursor: pointer; padding: 6px 20px;
-      color: var(--sand); font-family: 'DM Sans', sans-serif; font-size: 10px;
-      letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s;
-      -webkit-tap-highlight-color: transparent;
-      min-width: 64px;
+    @media(max-width:520px){
+      .twocol{grid-template-columns:1fr}
+      .entgrid{grid-template-columns:1fr}
     }
-    .bottom-nav-btn .nav-icon { font-size: 22px; line-height: 1; }
-    .bottom-nav-btn.active { color: var(--sage-light); }
-    .bottom-nav-btn.active .nav-icon { transform: scale(1.1); }
-
-    /* Header tabs hide on mobile, bottom nav shows */
-    @media (max-width: 600px) {
-      .tab-bar { display: none; }
-      .bottom-nav { display: flex; }
-      .content { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-      .header { padding: 16px 20px; padding-top: calc(16px + env(safe-area-inset-top)); }
-
-      /* Bigger touch targets on mobile */
-      .symptom-chip { padding: 10px 16px; font-size: 14px; }
-      .submit-btn, .analyze-btn { padding: 18px; font-size: 16px; }
-      input[type="text"], textarea { font-size: 16px; } /* prevents iOS zoom on focus */
-      .tag-input { font-size: 16px !important; } /* prevents iOS zoom */
-    }
-
-    @media (max-width: 560px) {
-      .two-col { grid-template-columns: 1fr; }
-      .log-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Install prompt banner */
-    .install-banner {
-      display: none;
-      background: var(--moss); color: white;
-      padding: 12px 20px; text-align: center;
-      font-size: 13px; align-items: center; justify-content: space-between; gap: 12px;
-    }
-    .install-banner.show { display: flex; }
-    .install-banner button { background: white; color: var(--moss); border: none; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-    .install-banner-dismiss { background: none !important; color: rgba(255,255,255,0.7) !important; font-size: 18px !important; padding: 0 !important; }
+  </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- iOS "Add to Home Screen" install hint banner -->
-  <div class="install-banner" id="install-banner">
-    <span>📲 Add to your home screen for the best experience</span>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="dismissInstall()">How?</button>
-      <button class="install-banner-dismiss" onclick="dismissInstall()">✕</button>
+<div id="app">
+
+  <!-- Install banner -->
+  <div class="installbanner" id="installbanner">
+    <span>📲 Add to home screen for the best experience</span>
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <button class="installbtn" onclick="showInstallHelp()">How?</button>
+      <button class="dismissbtn" onclick="dismissInstall()">✕</button>
     </div>
   </div>
 
@@ -213,502 +145,404 @@
   <div class="header">
     <div>
       <div class="header-title">Skin Journal</div>
-      <div class="header-subtitle">Daily Trigger Tracker &nbsp;·&nbsp; <span id="header-count">0 entries</span></div>
+      <div class="header-sub">Daily Trigger Tracker · <span id="hcount">0 entries</span></div>
     </div>
-    <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('log', this)">📝 Log</button>
-      <button class="tab-btn inactive" onclick="switchTab('history', this)">📖 History</button>
-      <button class="tab-btn inactive" onclick="switchTab('analysis', this)">🔬 Analysis</button>
+    <div class="tabs">
+      <button class="tab on" id="htab-log" onclick="go('log')">📝 Log</button>
+      <button class="tab off" id="htab-history" onclick="go('history')">📖 History</button>
+      <button class="tab off" id="htab-analysis" onclick="go('analysis')">🔬 Analysis</button>
     </div>
   </div>
 
   <div class="content">
 
-    <!-- ── LOG TAB ── -->
-    <div id="tab-log" class="tab-panel active">
-
-      <div class="date-strip">
+    <!-- LOG PANEL -->
+    <div class="panel on" id="panel-log">
+      <div class="datestrip">
         <div>
-          <div class="date-text" id="today-date"></div>
-          <div class="date-sub">How are you doing today?</div>
+          <div class="datetext" id="todaydate"></div>
+          <div class="datesub">How are you doing today?</div>
         </div>
-        <span class="saved-badge" id="saved-badge">✓ Saved!</span>
+        <span class="saved" id="savedbadge">✓ Saved!</span>
       </div>
 
-      <!-- Food -->
       <div class="card">
-        <div class="card-title">🥗 Food & Drinks</div>
+        <div class="card-title">🥗 Food &amp; Drinks</div>
         <label>What did you eat and drink today?</label>
-        <div class="tags-container" id="foods-container" onclick="focusTagInput('foods-input')">
-          <input class="tag-input" id="foods-input" placeholder="Type and press Enter — e.g. oat milk, sushi, strawberries" />
+        <div class="tagbox" id="tb-foods" onclick="fi('ti-foods')">
+          <input class="taginput" id="ti-foods" placeholder="Type and press Enter — e.g. oat milk, sushi…" />
         </div>
         <p class="hint">Add each item separately so patterns can be detected</p>
       </div>
 
-      <!-- Stress + Sleep -->
-      <div class="two-col">
+      <div class="twocol">
         <div class="card">
           <div class="card-title">🧠 Stress Level</div>
-          <div class="slider-row">
-            <input type="range" min="1" max="5" value="3" id="stress-slider" oninput="document.getElementById('stress-val').textContent=this.value" />
-            <div class="slider-value" id="stress-val">3</div>
+          <div class="slrow">
+            <input type="range" min="1" max="5" value="3" id="sl-stress" oninput="sv('sv-stress',this.value)" />
+            <div class="slval" id="sv-stress">3</div>
           </div>
-          <div class="slider-labels"><span>Very calm</span><span>Very stressed</span></div>
+          <div class="sllabels"><span>Calm</span><span>Stressed</span></div>
         </div>
         <div class="card">
           <div class="card-title">🌙 Sleep Quality</div>
-          <div class="slider-row">
-            <input type="range" min="1" max="5" value="3" id="sleep-slider" oninput="document.getElementById('sleep-val').textContent=this.value" />
-            <div class="slider-value" id="sleep-val">3</div>
+          <div class="slrow">
+            <input type="range" min="1" max="5" value="3" id="sl-sleep" oninput="sv('sv-sleep',this.value)" />
+            <div class="slval" id="sv-sleep">3</div>
           </div>
-          <div class="slider-labels"><span>Poor</span><span>Great</span></div>
+          <div class="sllabels"><span>Poor</span><span>Great</span></div>
         </div>
       </div>
 
-      <!-- Skincare -->
       <div class="card">
         <div class="card-title">✨ Skincare Products</div>
         <label>Products applied today</label>
-        <div class="tags-container" id="skincare-container" onclick="focusTagInput('skincare-input')">
-          <input class="tag-input" id="skincare-input" placeholder="e.g. CeraVe, SPF 50, new toner…" />
+        <div class="tagbox" id="tb-skincare" onclick="fi('ti-skincare')">
+          <input class="taginput" id="ti-skincare" placeholder="e.g. CeraVe, SPF 50, new toner…" />
         </div>
       </div>
 
-      <!-- Exposures + Exercise -->
-      <div class="two-col">
+      <div class="twocol">
         <div class="card">
           <div class="card-title">🌿 Exposures</div>
           <label>Environmental contacts</label>
-          <div class="tags-container" id="exposures-container" onclick="focusTagInput('exposures-input')">
-            <input class="tag-input" id="exposures-input" placeholder="e.g. cat, pollen, detergent…" />
+          <div class="tagbox" id="tb-exposures" onclick="fi('ti-exposures')">
+            <input class="taginput" id="ti-exposures" placeholder="e.g. cat, pollen, detergent…" />
           </div>
         </div>
         <div class="card">
           <div class="card-title">🏃 Exercise</div>
           <label>Activity today</label>
-          <input type="text" id="exercise-input" placeholder="e.g. 30min run, yoga, rest day" />
+          <input type="text" id="exercise" placeholder="e.g. 30min run, yoga, rest day" />
         </div>
       </div>
 
-      <!-- Medications -->
       <div class="card">
-        <div class="card-title">💊 Medications & Supplements</div>
+        <div class="card-title">💊 Medications &amp; Supplements</div>
         <label>Anything taken today</label>
-        <div class="tags-container" id="meds-container" onclick="focusTagInput('meds-input')">
-          <input class="tag-input" id="meds-input" placeholder="e.g. vitamin D, antihistamine, fish oil…" />
+        <div class="tagbox" id="tb-meds" onclick="fi('ti-meds')">
+          <input class="taginput" id="ti-meds" placeholder="e.g. vitamin D, antihistamine, fish oil…" />
         </div>
       </div>
 
-      <!-- Skin outcome -->
       <div class="card">
         <div class="card-title">🪞 Skin Today</div>
         <label style="margin-bottom:10px">Any symptoms? (select all that apply)</label>
-        <div class="symptom-grid" id="symptom-grid"></div>
-
-        <div class="severity-section" id="severity-section">
+        <div class="chips" id="chipgrid"></div>
+        <div class="sevsec" id="sevsec">
           <label>Severity today</label>
-          <div class="slider-row">
-            <input type="range" min="1" max="5" value="1" id="severity-slider" oninput="document.getElementById('severity-val').textContent=this.value" />
-            <div class="slider-value" id="severity-val">1</div>
+          <div class="slrow">
+            <input type="range" min="1" max="5" value="1" id="sl-sev" oninput="sv('sv-sev',this.value)" />
+            <div class="slval" id="sv-sev">1</div>
           </div>
-          <div class="slider-labels"><span>Mild</span><span>Severe</span></div>
-          <div style="margin-bottom:16px"></div>
+          <div class="sllabels"><span>Mild</span><span>Severe</span></div>
+          <div style="margin-bottom:14px"></div>
         </div>
-
         <label>Photo (optional)</label>
-        <label class="photo-upload-label" id="photo-label">
-          <input type="file" accept="image/*" id="photo-input" style="display:none" onchange="handlePhoto(this)" />
-          <div style="font-size:32px;margin-bottom:8px">📷</div>
-          <div style="font-size:13px;color:var(--muted)">Tap to add a photo of your skin today</div>
+        <label class="photolabel" id="photolabel">
+          <input type="file" accept="image/*" style="display:none" onchange="loadPhoto(this)" />
+          <div style="font-size:30px;margin-bottom:7px">📷</div>
+          <div style="font-size:12px;color:var(--muted)">Tap to add a photo of your skin today</div>
         </label>
-        <div class="photo-preview" id="photo-preview" style="display:none">
-          <img id="photo-img" src="" alt="skin today" />
-          <button class="photo-remove" onclick="removePhoto()">×</button>
+        <div class="photopreview" id="photopreview" style="display:none">
+          <img id="photoimg" src="" alt="skin" />
+          <button class="photorm" onclick="rmPhoto()">×</button>
         </div>
-
-        <div style="margin-top:16px">
+        <div style="margin-top:14px">
           <label>Notes</label>
-          <textarea id="notes-input" placeholder="Anything else worth noting — new environment, period, mood, travelled somewhere, tried something new…"></textarea>
+          <textarea id="notes" placeholder="Anything else worth noting — new environment, period, mood, travel, new product…"></textarea>
         </div>
       </div>
 
-      <button class="submit-btn" onclick="saveEntry()">Save Today's Entry →</button>
+      <button class="savebtn" onclick="saveEntry()">Save Today's Entry →</button>
     </div>
 
-    <!-- ── HISTORY TAB ── -->
-    <div id="tab-history" class="tab-panel">
-      <div id="history-content"></div>
+    <!-- HISTORY PANEL -->
+    <div class="panel" id="panel-history">
+      <div id="histcontent"></div>
     </div>
 
-    <!-- ── ANALYSIS TAB ── -->
-    <div id="tab-analysis" class="tab-panel">
-      <div class="card" style="margin-bottom:20px">
+    <!-- ANALYSIS PANEL -->
+    <div class="panel" id="panel-analysis">
+      <div class="card" style="margin-bottom:18px">
         <div class="card-title">🔬 AI Pattern Analysis</div>
-        <p style="font-size:14px;color:var(--muted);line-height:1.7">
-          Once you have a few days of entries, Claude will analyze your logs and surface potential trigger patterns —
-          including lag effects that might not be obvious day-to-day.
-        </p>
-        <p id="entry-count-label" style="font-size:13px;color:var(--muted);margin-top:10px;font-weight:500">No entries yet — log a few days first.</p>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">Once you have a few days of entries, Claude will analyze your logs and surface potential trigger patterns — including lag effects that might not be obvious day-to-day.</p>
+        <p id="entcount" style="font-size:12px;color:var(--muted);margin-top:9px;font-weight:500">No entries yet — log a few days first.</p>
       </div>
-      <button class="analyze-btn" id="analyze-btn" onclick="runAnalysis()" disabled>Analyze My Patterns →</button>
-      <div id="analysis-output"></div>
-      <div style="margin-top:32px;text-align:center">
-        <button onclick="clearAllData()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">
-          🗑 Clear all data
-        </button>
+      <button class="analyzebtn" id="analyzebtn" onclick="analyze()" disabled>Analyze My Patterns →</button>
+      <div id="analysisout"></div>
+      <div style="margin-top:28px;text-align:center">
+        <button onclick="clearData()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">🗑 Clear all data</button>
       </div>
     </div>
 
-  </div><!-- end content -->
+  </div>
 
-  <!-- Bottom nav (mobile only, shown via CSS media query) -->
-  <nav class="bottom-nav">
-    <button class="bottom-nav-btn active" id="nav-log" onclick="switchTab('log')">
-      <span class="nav-icon">📝</span>Log
-    </button>
-    <button class="bottom-nav-btn" id="nav-history" onclick="switchTab('history')">
-      <span class="nav-icon">📖</span>History
-    </button>
-    <button class="bottom-nav-btn" id="nav-analysis" onclick="switchTab('analysis')">
-      <span class="nav-icon">🔬</span>Analysis
-    </button>
+  <!-- Bottom nav -->
+  <nav class="botnav" id="botnav">
+    <button class="navbtn on" id="nb-log" onclick="go('log')"><span class="ni">📝</span>Log</button>
+    <button class="navbtn" id="nb-history" onclick="go('history')"><span class="ni">📖</span>History</button>
+    <button class="navbtn" id="nb-analysis" onclick="go('analysis')"><span class="ni">🔬</span>Analysis</button>
   </nav>
 
-</div><!-- end app -->
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const SYMPTOMS_LIST = ["Redness","Itching","Swelling","Hives","Dry patches","Burning","Peeling","Rash"];
-  const tagData = { foods: [], skincare: [], exposures: [], meds: [] };
-  let selectedSymptoms = [];
-  let photoData = null;
+// ── State ──
+var SYMPTOMS = ["Redness","Itching","Swelling","Hives","Dry patches","Burning","Peeling","Rash"];
+var tags = {foods:[],skincare:[],exposures:[],meds:[]};
+var selSymptoms = [];
+var photoData = null;
+var KEY = 'skinjournal-v1';
+var entries = [];
 
-  // ── localStorage persistence ──
-  const STORAGE_KEY = 'skin-journal-entries';
+try { entries = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ entries=[]; }
 
-  function saveToStorage() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    } catch(e) {
-      // Storage full (photos can be large) — warn user once
-      if (!window._storageWarned) {
-        window._storageWarned = true;
-        alert('Storage is getting full. Consider clearing old photo entries to free up space.');
-      }
-    }
-  }
+// ── Init ──
+document.getElementById('todaydate').textContent = fmtDate(new Date());
+buildChips();
+setupTags();
+updateCounts();
+showInstallPrompt();
 
-  function loadFromStorage() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch(e) {
-      return [];
-    }
-  }
+// ── Routing ──
+function go(name) {
+  ['log','history','analysis'].forEach(function(n){
+    document.getElementById('panel-'+n).classList.toggle('on', n===name);
+    var ht = document.getElementById('htab-'+n);
+    if(ht){ ht.className = 'tab '+(n===name?'on':'off'); }
+    var nb = document.getElementById('nb-'+n);
+    if(nb){ nb.className = 'navbtn '+(n===name?'on':''); }
+  });
+  if(name==='history') renderHistory();
+  if(name==='analysis') updateCounts();
+}
 
-  let entries = loadFromStorage();
-
-  // ── Init ──
-  document.getElementById('today-date').textContent = formatDate(new Date());
-  buildSymptomGrid();
-  setupTagInputs();
-  updateAnalysisState();
-
-  function formatDate(d) {
-    return new Date(d).toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric" });
-  }
-
-  // ── Tabs ──
-  function switchTab(name) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-
-    // Update header tabs
-    document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('inactive'); });
-    document.querySelectorAll('.tab-btn').forEach(b => {
-      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) {
-        b.classList.add('active'); b.classList.remove('inactive');
+// ── Tags ──
+function setupTags(){
+  var configs = [
+    {tb:'tb-foods',ti:'ti-foods',key:'foods'},
+    {tb:'tb-skincare',ti:'ti-skincare',key:'skincare'},
+    {tb:'tb-exposures',ti:'ti-exposures',key:'exposures'},
+    {tb:'tb-meds',ti:'ti-meds',key:'meds'}
+  ];
+  configs.forEach(function(c){
+    var inp = document.getElementById(c.ti);
+    inp.addEventListener('keydown', function(e){
+      if((e.key==='Enter'||e.key===',') && inp.value.trim()){
+        e.preventDefault();
+        var v = inp.value.trim();
+        if(!tags[c.key].includes(v)){ tags[c.key].push(v); renderTags(c.key,c.tb,c.ti); }
+        inp.value='';
       }
     });
+  });
+}
+function fi(id){ document.getElementById(id).focus(); }
+function sv(id,val){ document.getElementById(id).textContent=val; }
+function renderTags(key,tbId,tiId){
+  var tb = document.getElementById(tbId);
+  var ti = document.getElementById(tiId);
+  tb.querySelectorAll('.tag').forEach(function(t){t.remove();});
+  tags[key].forEach(function(v){
+    var t = document.createElement('span');
+    t.className='tag';
+    t.innerHTML=v+'<button class="tagx" onclick="rmTag(\''+key+'\',\''+v+'\',\''+tbId+'\',\''+tiId+'\')">×</button>';
+    tb.insertBefore(t,ti);
+  });
+  ti.placeholder = tags[key].length?'':ti.dataset.ph||'';
+}
+function rmTag(key,val,tbId,tiId){
+  tags[key]=tags[key].filter(function(x){return x!==val;});
+  renderTags(key,tbId,tiId);
+}
 
-    // Update bottom nav
-    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
-    const navBtn = document.getElementById('nav-' + name);
-    if (navBtn) navBtn.classList.add('active');
-
-    if (name === 'history') renderHistory();
-    if (name === 'analysis') updateAnalysisState();
+// ── Symptoms ──
+function buildChips(){
+  var grid = document.getElementById('chipgrid');
+  SYMPTOMS.forEach(function(s){
+    var c = document.createElement('div');
+    c.className='chip'; c.textContent=s; c.dataset.s=s;
+    c.onclick=function(){ toggleChip(s,c); };
+    grid.appendChild(c);
+  });
+}
+function toggleChip(s,el){
+  if(selSymptoms.includes(s)){
+    selSymptoms=selSymptoms.filter(function(x){return x!==s;});
+    el.classList.remove('on');
+  } else {
+    selSymptoms.push(s);
+    el.classList.add('on');
   }
+  document.getElementById('sevsec').classList.toggle('on',selSymptoms.length>0);
+}
 
-  // ── Tag inputs ──
-  function setupTagInputs() {
-    const configs = [
-      { inputId: 'foods-input', containerId: 'foods-container', key: 'foods' },
-      { inputId: 'skincare-input', containerId: 'skincare-container', key: 'skincare' },
-      { inputId: 'exposures-input', containerId: 'exposures-container', key: 'exposures' },
-      { inputId: 'meds-input', containerId: 'meds-container', key: 'meds' },
-    ];
-    configs.forEach(({ inputId, containerId, key }) => {
-      const input = document.getElementById(inputId);
-      input.addEventListener('keydown', e => {
-        if ((e.key === 'Enter' || e.key === ',') && input.value.trim()) {
-          e.preventDefault();
-          addTag(key, input.value.trim(), containerId, inputId);
-          input.value = '';
-        }
-      });
+// ── Photo ──
+function loadPhoto(inp){
+  var file=inp.files[0]; if(!file) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    photoData=e.target.result;
+    document.getElementById('photoimg').src=photoData;
+    document.getElementById('photolabel').style.display='none';
+    document.getElementById('photopreview').style.display='inline-block';
+  };
+  r.readAsDataURL(file);
+}
+function rmPhoto(){
+  photoData=null;
+  document.getElementById('photolabel').style.display='block';
+  document.getElementById('photopreview').style.display='none';
+}
+
+// ── Save ──
+function saveEntry(){
+  var entry={
+    id:Date.now(), date:new Date().toISOString(),
+    foods:tags.foods.slice(), stress:+document.getElementById('sl-stress').value,
+    sleep:+document.getElementById('sl-sleep').value,
+    skincare:tags.skincare.slice(), exposures:tags.exposures.slice(),
+    exercise:document.getElementById('exercise').value,
+    meds:tags.meds.slice(), symptoms:selSymptoms.slice(),
+    severity:selSymptoms.length>0?+document.getElementById('sl-sev').value:0,
+    notes:document.getElementById('notes').value, photo:photoData
+  };
+  entries.unshift(entry);
+  try{ localStorage.setItem(KEY,JSON.stringify(entries)); }catch(e){}
+  resetForm();
+  var b=document.getElementById('savedbadge'); b.classList.add('on');
+  setTimeout(function(){b.classList.remove('on');},2500);
+  updateCounts();
+}
+function resetForm(){
+  ['foods','skincare','exposures','meds'].forEach(function(k){
+    tags[k]=[];
+    var map={foods:['tb-foods','ti-foods'],skincare:['tb-skincare','ti-skincare'],exposures:['tb-exposures','ti-exposures'],meds:['tb-meds','ti-meds']};
+    renderTags(k,map[k][0],map[k][1]);
+  });
+  document.getElementById('sl-stress').value=3; sv('sv-stress',3);
+  document.getElementById('sl-sleep').value=3; sv('sv-sleep',3);
+  document.getElementById('sl-sev').value=1; sv('sv-sev',1);
+  document.getElementById('exercise').value='';
+  document.getElementById('notes').value='';
+  selSymptoms=[];
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+  document.getElementById('sevsec').classList.remove('on');
+  rmPhoto();
+}
+
+// ── History ──
+function renderHistory(){
+  var c=document.getElementById('histcontent');
+  if(!entries.length){
+    c.innerHTML='<div class="empty"><div class="emptyicon">📖</div><div class="emptytitle">No entries yet</div><p>Log your first day to start building your history</p></div>';
+    return;
+  }
+  c.innerHTML=entries.map(function(e){
+    var hasSym=e.symptoms&&e.symptoms.length>0;
+    return '<div class="entry">'+
+      '<div class="entryhead">'+
+        '<div class="entrydate">'+fmtDate(e.date)+'</div>'+
+        '<span class="badge s'+(hasSym?e.severity:0)+'">'+(hasSym?'Severity '+e.severity+'/5':'Clear skin ✓')+'</span>'+
+      '</div>'+
+      '<div class="entgrid">'+
+        '<div class="entfield"><label>Food &amp; drinks</label>'+tagsHtml(e.foods)+'</div>'+
+        '<div class="entfield"><label>Stress / Sleep</label><p>Stress '+e.stress+'/5 · Sleep '+e.sleep+'/5</p></div>'+
+        '<div class="entfield"><label>Skincare</label>'+tagsHtml(e.skincare)+'</div>'+
+        '<div class="entfield"><label>Exposures</label>'+tagsHtml(e.exposures)+'</div>'+
+        (hasSym?'<div class="entfield" style="grid-column:1/-1"><label>Symptoms</label><div class="logtags">'+e.symptoms.map(function(t){return '<span class="logtag sym">'+t+'</span>';}).join('')+'</div></div>':'')+
+        (e.notes?'<div class="entfield" style="grid-column:1/-1"><label>Notes</label><p>'+e.notes+'</p></div>':'')+
+      '</div>'+
+      (e.photo?'<img src="'+e.photo+'" style="width:76px;height:76px;object-fit:cover;border-radius:8px;margin-top:10px" />':'')+
+    '</div>';
+  }).join('');
+}
+function tagsHtml(arr){
+  if(!arr||!arr.length) return '<p>—</p>';
+  return '<div class="logtags">'+arr.map(function(t){return '<span class="logtag">'+t+'</span>';}).join('')+'</div>';
+}
+
+// ── Counts ──
+function updateCounts(){
+  var n=entries.length;
+  document.getElementById('hcount').textContent=n?n+' entr'+(n===1?'y':'ies')+' saved':'0 entries';
+  document.getElementById('entcount').textContent=n?n+' entr'+(n===1?'y':'ies')+' ready for analysis.':'No entries yet — log a few days first.';
+  document.getElementById('analyzebtn').disabled=!n;
+}
+
+// ── Clear ──
+function clearData(){
+  if(confirm('Delete all entries? This cannot be undone.')){
+    entries=[];
+    localStorage.removeItem(KEY);
+    updateCounts();
+    renderHistory();
+    document.getElementById('analysisout').innerHTML='';
+  }
+}
+
+// ── Analysis ──
+async function analyze(){
+  var btn=document.getElementById('analyzebtn');
+  var out=document.getElementById('analysisout');
+  btn.disabled=true;
+  btn.innerHTML='Analyzing <span class="dots"><span></span><span></span><span></span></span>';
+  out.innerHTML='';
+  var summary=entries.map(function(e){
+    return 'Date: '+fmtDate(e.date)+
+      '\nFoods: '+(e.foods.join(', ')||'none')+
+      '\nStress: '+e.stress+'/5 | Sleep: '+e.sleep+'/5'+
+      '\nSkincare: '+(e.skincare.join(', ')||'none')+
+      '\nExposures: '+(e.exposures.join(', ')||'none')+
+      '\nExercise: '+(e.exercise||'none')+
+      '\nMedications: '+(e.meds.join(', ')||'none')+
+      '\nSkin: '+(e.symptoms.length?e.symptoms.join(', ')+' (severity '+e.severity+'/5)':'none')+
+      '\nNotes: '+(e.notes||'—');
+  }).join('\n---\n');
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'You are a compassionate health pattern analyst helping someone understand their skin allergy triggers. Analyze the daily logs to find correlations between lifestyle variables and skin reactions. Consider lag effects — reactions often appear 24-72 hours after exposure. Look for compound triggers. Structure your response in exactly three sections: **Key Patterns** **Most Likely Triggers** **One Thing To Try**. Be warm, specific, plain English only, honest about uncertainty.',
+        messages:[{role:'user',content:'Please analyze these skin health logs:\n\n'+summary}]
+      })
     });
+    var data=await res.json();
+    var text=(data.content&&data.content[0]&&data.content[0].text)||'Unable to generate analysis.';
+    out.innerHTML='<div class="result"><h3>✦ Your Pattern Report</h3><div class="resulttext">'+text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+'</div></div>';
+  }catch(e){
+    out.innerHTML='<div class="result"><p style="color:var(--muted)">Something went wrong. Please try again.</p></div>';
   }
+  btn.disabled=false;
+  btn.innerHTML='Analyze My Patterns →';
+}
 
-  function focusTagInput(id) { document.getElementById(id).focus(); }
+// ── Helpers ──
+function fmtDate(d){
+  return new Date(d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+}
 
-  function addTag(key, value, containerId, inputId) {
-    if (tagData[key].includes(value)) return;
-    tagData[key].push(value);
-    renderTags(key, containerId, inputId);
+// ── iOS install prompt ──
+function showInstallPrompt(){
+  var isIos=/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+  var isStandalone=window.navigator.standalone===true;
+  var dismissed=localStorage.getItem('skinjournal-install-dismissed');
+  if(isIos&&!isStandalone&&!dismissed){
+    setTimeout(function(){document.getElementById('installbanner').classList.add('on');},1500);
   }
-
-  function removeTag(key, value, containerId, inputId) {
-    tagData[key] = tagData[key].filter(t => t !== value);
-    renderTags(key, containerId, inputId);
-  }
-
-  function renderTags(key, containerId, inputId) {
-    const container = document.getElementById(containerId);
-    const input = document.getElementById(inputId);
-    // Remove existing tag spans
-    container.querySelectorAll('.tag').forEach(t => t.remove());
-    tagData[key].forEach(val => {
-      const tag = document.createElement('span');
-      tag.className = 'tag';
-      tag.innerHTML = `${val}<button class="tag-remove" onclick="removeTag('${key}','${val}','${containerId}','${inputId}')">×</button>`;
-      container.insertBefore(tag, input);
-    });
-    if (tagData[key].length === 0) input.placeholder = getPlaceholder(key);
-    else input.placeholder = '';
-  }
-
-  function getPlaceholder(key) {
-    const map = {
-      foods: 'Type and press Enter — e.g. oat milk, sushi, strawberries',
-      skincare: 'e.g. CeraVe, SPF 50, new toner…',
-      exposures: 'e.g. cat, pollen, detergent…',
-      meds: 'e.g. vitamin D, antihistamine, fish oil…'
-    };
-    return map[key] || '';
-  }
-
-  // ── Symptoms ──
-  function buildSymptomGrid() {
-    const grid = document.getElementById('symptom-grid');
-    SYMPTOMS_LIST.forEach(s => {
-      const chip = document.createElement('div');
-      chip.className = 'symptom-chip';
-      chip.textContent = s;
-      chip.dataset.symptom = s;
-      chip.onclick = () => toggleSymptom(s, chip);
-      grid.appendChild(chip);
-    });
-  }
-
-  function toggleSymptom(s, chip) {
-    if (selectedSymptoms.includes(s)) {
-      selectedSymptoms = selectedSymptoms.filter(x => x !== s);
-      chip.classList.remove('selected');
-    } else {
-      selectedSymptoms.push(s);
-      chip.classList.add('selected');
-    }
-    document.getElementById('severity-section').classList.toggle('show', selectedSymptoms.length > 0);
-  }
-
-  // ── Photo ──
-  function handlePhoto(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      photoData = e.target.result;
-      document.getElementById('photo-img').src = photoData;
-      document.getElementById('photo-label').style.display = 'none';
-      document.getElementById('photo-preview').style.display = 'inline-block';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removePhoto() {
-    photoData = null;
-    document.getElementById('photo-input').value = '';
-    document.getElementById('photo-label').style.display = 'block';
-    document.getElementById('photo-preview').style.display = 'none';
-  }
-
-  // ── Save entry ──
-  function saveEntry() {
-    const entry = {
-      id: Date.now(),
-      date: new Date().toISOString(),
-      foods: [...tagData.foods],
-      stress: parseInt(document.getElementById('stress-slider').value),
-      sleep: parseInt(document.getElementById('sleep-slider').value),
-      skincare: [...tagData.skincare],
-      exposures: [...tagData.exposures],
-      exercise: document.getElementById('exercise-input').value,
-      medications: [...tagData.meds],
-      symptoms: [...selectedSymptoms],
-      severity: selectedSymptoms.length > 0 ? parseInt(document.getElementById('severity-slider').value) : 0,
-      notes: document.getElementById('notes-input').value,
-      photo: photoData
-    };
-    entries.unshift(entry);
-    saveToStorage();
-    resetForm();
-    const badge = document.getElementById('saved-badge');
-    badge.classList.add('show');
-    setTimeout(() => badge.classList.remove('show'), 2500);
-    updateAnalysisState();
-  }
-
-  function resetForm() {
-    ['foods','skincare','exposures','meds'].forEach(key => {
-      tagData[key] = [];
-      const configs = { foods:['foods-container','foods-input'], skincare:['skincare-container','skincare-input'], exposures:['exposures-container','exposures-input'], meds:['meds-container','meds-input'] };
-      renderTags(key, configs[key][0], configs[key][1]);
-    });
-    document.getElementById('stress-slider').value = 3;
-    document.getElementById('stress-val').textContent = 3;
-    document.getElementById('sleep-slider').value = 3;
-    document.getElementById('sleep-val').textContent = 3;
-    document.getElementById('severity-slider').value = 1;
-    document.getElementById('severity-val').textContent = 1;
-    document.getElementById('exercise-input').value = '';
-    document.getElementById('notes-input').value = '';
-    selectedSymptoms = [];
-    document.querySelectorAll('.symptom-chip').forEach(c => c.classList.remove('selected'));
-    document.getElementById('severity-section').classList.remove('show');
-    removePhoto();
-  }
-
-  // ── History ──
-  function renderHistory() {
-    const container = document.getElementById('history-content');
-    if (entries.length === 0) {
-      container.innerHTML = `<div class="empty-state"><div class="empty-icon">📖</div><div class="empty-title">No entries yet</div><p>Log your first day to start building your history</p></div>`;
-      return;
-    }
-    container.innerHTML = entries.map(e => `
-      <div class="log-entry">
-        <div class="log-entry-header">
-          <div class="log-date">${formatDate(e.date)}</div>
-          <span class="severity-badge sev-${e.symptoms.length > 0 ? e.severity : 0}">
-            ${e.symptoms.length === 0 ? 'Clear skin ✓' : `Severity ${e.severity}/5`}
-          </span>
-        </div>
-        <div class="log-grid">
-          <div class="log-field"><label>Food & drinks</label>
-            ${e.foods.length > 0 ? `<div class="log-tags">${e.foods.map(t=>`<span class="log-tag">${t}</span>`).join('')}</div>` : '<p>—</p>'}
-          </div>
-          <div class="log-field"><label>Stress / Sleep</label><p>Stress ${e.stress}/5 · Sleep ${e.sleep}/5</p></div>
-          <div class="log-field"><label>Skincare</label>
-            ${e.skincare.length > 0 ? `<div class="log-tags">${e.skincare.map(t=>`<span class="log-tag">${t}</span>`).join('')}</div>` : '<p>—</p>'}
-          </div>
-          <div class="log-field"><label>Exposures</label>
-            ${e.exposures.length > 0 ? `<div class="log-tags">${e.exposures.map(t=>`<span class="log-tag">${t}</span>`).join('')}</div>` : '<p>—</p>'}
-          </div>
-          ${e.symptoms.length > 0 ? `<div class="log-field" style="grid-column:1/-1"><label>Symptoms</label><div class="log-tags">${e.symptoms.map(t=>`<span class="log-tag symptom">${t}</span>`).join('')}</div></div>` : ''}
-          ${e.notes ? `<div class="log-field" style="grid-column:1/-1"><label>Notes</label><p>${e.notes}</p></div>` : ''}
-        </div>
-        ${e.photo ? `<img src="${e.photo}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-top:12px" />` : ''}
-      </div>
-    `).join('');
-  }
-
-  // ── Analysis ──
-  function updateAnalysisState() {
-    const count = entries.length;
-    document.getElementById('entry-count-label').textContent =
-      count === 0 ? 'No entries yet — log a few days first.' : `${count} entr${count === 1 ? 'y' : 'ies'} ready for analysis.`;
-    document.getElementById('analyze-btn').disabled = count === 0;
-    document.getElementById('header-count').textContent =
-      count === 0 ? '0 entries' : `${count} entr${count === 1 ? 'y' : 'ies'} saved`;
-  }
-
-  function clearAllData() {
-    if (confirm('Are you sure you want to delete all entries? This cannot be undone.')) {
-      entries = [];
-      localStorage.removeItem(STORAGE_KEY);
-      updateAnalysisState();
-      renderHistory();
-      document.getElementById('analysis-output').innerHTML = '';
-    }
-  }
-
-  async function runAnalysis() {
-    const btn = document.getElementById('analyze-btn');
-    const output = document.getElementById('analysis-output');
-    btn.disabled = true;
-    btn.innerHTML = `Analyzing <span class="loading-dots"><span></span><span></span><span></span></span>`;
-    output.innerHTML = '';
-
-    const summary = entries.map(e => `
-Date: ${formatDate(e.date)}
-Foods: ${e.foods.join(', ') || 'none logged'}
-Stress: ${e.stress}/5 | Sleep: ${e.sleep}/5
-Skincare: ${e.skincare.join(', ') || 'none'}
-Exposures: ${e.exposures.join(', ') || 'none'}
-Exercise: ${e.exercise || 'none'}
-Medications/supplements: ${e.medications.join(', ') || 'none'}
-Skin symptoms: ${e.symptoms.length ? e.symptoms.join(', ') + ' (severity ' + e.severity + '/5)' : 'none'}
-Notes: ${e.notes || '—'}
-`).join('\n---\n');
-
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are a compassionate health pattern analyst helping someone understand their skin allergy triggers.
-Analyze the daily logs to find correlations between lifestyle variables and skin reactions.
-Consider lag effects — reactions often appear 24-72 hours after exposure to a trigger.
-Look for compound triggers — combinations that together cause reactions even if individually they don't.
-Structure your response in exactly three sections with these headers:
-**Key Patterns**
-**Most Likely Triggers**
-**One Thing To Try**
-Be warm, specific, and encouraging. Plain English only — no medical jargon. Be honest about uncertainty when data is limited.`,
-          messages: [{ role: 'user', content: `Please analyze these skin health logs for patterns:\n\n${summary}` }]
-        })
-      });
-      const data = await res.json();
-      const text = data.content?.[0]?.text || 'Unable to generate analysis. Please try again.';
-      output.innerHTML = `<div class="analysis-result"><h3>✦ Your Pattern Report</h3><div class="analysis-text">${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</div></div>`;
-    } catch (err) {
-      output.innerHTML = `<div class="analysis-result"><p style="color:var(--muted)">Something went wrong. Please try again.</p></div>`;
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = 'Analyze My Patterns →';
-  }
-
-  // ── PWA: Show iOS install hint if on iOS and not already installed ──
-  function isIos() {
-    return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-  }
-  function isInStandaloneMode() {
-    return window.navigator.standalone === true;
-  }
-  function dismissInstall() {
-    document.getElementById('install-banner').classList.remove('show');
-    localStorage.setItem('skin-journal-install-dismissed', '1');
-  }
-  if (isIos() && !isInStandaloneMode() && !localStorage.getItem('skin-journal-install-dismissed')) {
-    setTimeout(() => document.getElementById('install-banner').classList.add('show'), 1500);
-  }
-
-}); // end DOMContentLoaded
+}
+function showInstallHelp(){
+  alert('In Safari: tap the Share button (box with arrow) → scroll down → tap "Add to Home Screen"');
+  dismissInstall();
+}
+function dismissInstall(){
+  document.getElementById('installbanner').classList.remove('on');
+  localStorage.setItem('skinjournal-install-dismissed','1');
+}
 </script>
 </body>
 </html>
