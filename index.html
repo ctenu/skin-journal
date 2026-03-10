@@ -71,6 +71,9 @@
     .analyzebtn{width:100%;padding:15px;background:linear-gradient(135deg,var(--moss),var(--sage));color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px;transition:all .2s}
     .analyzebtn:hover{opacity:.9}
     .analyzebtn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+    .copybtn{width:100%;padding:12px;background:var(--warm);color:var(--bark);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;transition:all .2s}
+    .copybtn:hover:not(:disabled){background:var(--sand-light)}
+    .copybtn:disabled{color:var(--muted);cursor:not-allowed}
     /* Two col */
     .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     /* Severity section */
@@ -269,6 +272,15 @@
         <p style="font-size:13px;color:var(--muted);line-height:1.7">Once you have a few days of entries, Claude will analyze your logs and surface potential trigger patterns — including lag effects that might not be obvious day-to-day.</p>
         <p id="entcount" style="font-size:12px;color:var(--muted);margin-top:9px;font-weight:500">No entries yet — log a few days first.</p>
       </div>
+
+      <!-- Manual workaround while AI is being set up -->
+      <div class="card" style="margin-bottom:18px;border:1.5px dashed var(--border)">
+        <div class="card-title" style="margin-bottom:8px">📋 Manual Analysis (Workaround)</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px">While the AI button is being set up, copy your logs and paste them into <strong><a href="https://claude.ai" target="_blank" style="color:var(--moss)">claude.ai</a></strong> and ask: <em>"Analyze these skin logs and find trigger patterns."</em></p>
+        <button class="copybtn" id="copybtn" onclick="copyLogs()" disabled>📋 Copy All Logs to Clipboard</button>
+        <p id="copymsg" style="font-size:11px;color:var(--sage);margin-top:7px;display:none">✓ Copied! Now paste into claude.ai</p>
+      </div>
+
       <button class="analyzebtn" id="analyzebtn" onclick="analyze()" disabled>Analyze My Patterns →</button>
       <div id="analysisout"></div>
       <div style="margin-top:28px;text-align:center">
@@ -469,6 +481,36 @@ function updateCounts(){
   document.getElementById('hcount').textContent=n?n+' entr'+(n===1?'y':'ies')+' saved':'0 entries';
   document.getElementById('entcount').textContent=n?n+' entr'+(n===1?'y':'ies')+' ready for analysis.':'No entries yet — log a few days first.';
   document.getElementById('analyzebtn').disabled=!n;
+  document.getElementById('copybtn').disabled=!n;
+}
+
+// ── Copy logs ──
+function copyLogs(){
+  var summary = 'SKIN JOURNAL LOGS\n'+'='.repeat(40)+'\n\n'+
+    entries.map(function(e){
+      return 'Date: '+fmtDate(e.date)+
+        '\nFoods: '+(e.foods.join(', ')||'none')+
+        '\nStress: '+e.stress+'/5 | Sleep: '+e.sleep+'/5'+
+        '\nSkincare: '+(e.skincare.join(', ')||'none')+
+        '\nExposures: '+(e.exposures.join(', ')||'none')+
+        '\nExercise: '+(e.exercise||'none')+
+        '\nMedications: '+(e.meds.join(', ')||'none')+
+        '\nSkin symptoms: '+(e.symptoms.length?e.symptoms.join(', ')+' (severity '+e.severity+'/5)':'none')+
+        '\nNotes: '+(e.notes||'—');
+    }).join('\n\n---\n\n')+
+    '\n\n='.repeat(40)+
+    '\n\nPlease analyze these skin health logs and:\n'+
+    '1. Identify key patterns\n'+
+    '2. Highlight the most likely triggers (consider 24-72hr lag effects)\n'+
+    '3. Suggest one specific thing to try or eliminate';
+
+  navigator.clipboard.writeText(summary).then(function(){
+    var msg = document.getElementById('copymsg');
+    msg.style.display='block';
+    setTimeout(function(){ msg.style.display='none'; }, 3000);
+  }).catch(function(){
+    alert('Could not copy automatically. Please take a screenshot of your history tab instead.');
+  });
 }
 
 // ── Clear ──
